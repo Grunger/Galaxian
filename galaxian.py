@@ -107,24 +107,25 @@ def start_screen():
     """
     Начальная заставка с кнопками
     """
-    manager = pygame_gui.UIManager((WIDTH, HEIGHT))
+    manager = pygame_gui.UIManager((WIDTH, HEIGHT), os.path.join('data', 'menu_theme.json'))
     # Кнопки
     start_btn = pygame_gui.elements.UIButton(
-        relative_rect=pygame.Rect((WIDTH // 2 - 50, HEIGHT // 3 - 25), (100, 50)),
+        relative_rect=pygame.Rect((WIDTH // 2 - 75, HEIGHT // 3 - 25), (150, 50)),
         text='Начать игру',
         manager=manager
     )
     records_btn = pygame_gui.elements.UIButton(
-        relative_rect=pygame.Rect((WIDTH // 2 - 50, HEIGHT // 2 - 25), (100, 50)),
+        relative_rect=pygame.Rect((WIDTH // 2 - 75, HEIGHT // 2 - 25), (150, 50)),
         text='Рекорды',
         manager=manager
     )
     exit_btn = pygame_gui.elements.UIButton(
-        relative_rect=pygame.Rect((WIDTH // 2 - 50, HEIGHT // 2 + 125), (100, 50)),
+        relative_rect=pygame.Rect((WIDTH // 2 - 75, HEIGHT // 2 + 125), (150, 50)),
         text='Выход',
         manager=manager
     )
-    screen.fill(pygame.Color("black"))
+    back = load_image('start_fon.jpg')
+    screen.blit(back, (0, 0))
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
