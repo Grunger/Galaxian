@@ -26,6 +26,9 @@ def load_image(name, color_key=None):
 
 
 class Ship(pygame.sprite.Sprite):
+    """
+    Класс корабля
+    """
     def __init__(self, sheet, columns, rows, x, y):
         super().__init__(all_sprites)
         self.speed = 5
@@ -63,9 +66,9 @@ class Ship(pygame.sprite.Sprite):
 
 
 class Enemy(pygame.sprite.Sprite):
-    '''
+    """
     Класс врага
-    '''
+    """
 
     def __init__(self, sheet, columns, rows, x, y):
         super().__init__(all_sprites)
@@ -92,19 +95,17 @@ class Enemy(pygame.sprite.Sprite):
 
 
 def terminate():
-    '''
+    """
     Прерывание игры
-    :return:
-    '''
+    """
     pygame.quit()
     sys.exit()
 
 
 def start_screen():
-    '''
+    """
     Начальная заставка с кнопками
-    :return:
-    '''
+    """
     font = pygame.font.Font('./data/Amatic-Bold.ttf', 36)
     screen.fill(pygame.Color("black"))
     button = load_image('button.png')
@@ -137,10 +138,9 @@ def start_screen():
 
 
 def new_record():
-    '''
+    """
     Добавление рекорда
-    :return:
-    '''
+    """
     name = '|'
     recorded = False
     while True:
@@ -176,10 +176,9 @@ def new_record():
 
 
 def game():
-    '''
+    """
     Основной игровой цикл
-    :return:
-    '''
+    """
     ship = Ship(load_image("ship.gif"), 8, 1, 350, 500)
     for y in range(20, 300, 50):
         for x in range(100, 700, 75):
