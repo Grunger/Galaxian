@@ -10,25 +10,18 @@ HEIGHT = 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
-all_sprites = pygame.sprite.Group()
-enemies = pygame.sprite.Group()
-player_bullets = pygame.sprite.Group()
-enemy_bullets = pygame.sprite.Group()
-
 
 def load_image(name, color_key=None):
     fullname = os.path.join('data', name)
-    try:
-        image = pygame.image.load(fullname)
-    except pygame.error as message:
-        print('Cannot load image:', name)
-        raise SystemExit(message)
-    image = image.convert_alpha()
+    image = pygame.image.load(fullname)
 
     if color_key is not None:
+        image = image.convert()
         if color_key == -1:
             color_key = image.get_at((0, 0))
         image.set_colorkey(color_key)
+    else:
+        image = image.convert_alpha()
     return image
 
 
@@ -58,11 +51,11 @@ class Ship(pygame.sprite.Sprite):
             self.cur_frame = self.animations['straight']
             self.tick = 0
         if self.cur_anim == 'left':
-            if self. tick > 3 and self.cur_frame < 7:
+            if self.tick > 3 and self.cur_frame < 7:
                 self.cur_frame += 1
                 self.tick = 0
         if self.cur_anim == 'right':
-            if self. tick > 3 and self.cur_frame > 1:
+            if self.tick > 3 and self.cur_frame > 1:
                 self.cur_frame -= 1
                 self.tick = 0
         self.image = self.frames[self.cur_frame]
@@ -73,6 +66,7 @@ class Enemy(pygame.sprite.Sprite):
     '''
     Класс врага
     '''
+
     def __init__(self, sheet, columns, rows, x, y):
         super().__init__(all_sprites)
         self.speed = 5
@@ -115,22 +109,22 @@ def start_screen():
     screen.fill(pygame.Color("black"))
     button = load_image('button.png')
     screen.blit(button, (300, 200))
-    string_rendered = font.render('START GAME', 1, pygame.Color('black'))
+    string_rendered = font.render('START GAME', True, pygame.Color('black'))
     intro_rect = string_rendered.get_rect().move(350, 200)
     screen.blit(string_rendered, intro_rect)
     screen.blit(button, (300, 250))
-    string_rendered = font.render('RECORDS', 1, pygame.Color('black'))
+    string_rendered = font.render('RECORDS', True, pygame.Color('black'))
     intro_rect = string_rendered.get_rect().move(360, 250)
     screen.blit(string_rendered, intro_rect)
     screen.blit(button, (300, 300))
-    string_rendered = font.render('EXIT', 1, pygame.Color('black'))
+    string_rendered = font.render('EXIT', True, pygame.Color('black'))
     intro_rect = string_rendered.get_rect().move(380, 300)
     screen.blit(string_rendered, intro_rect)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
-            elif event.type ==  pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 if 300 <= event.pos[0] <= 500 and 200 <= event.pos[1] <= 245:
                     game()
                     return
@@ -156,7 +150,7 @@ def new_record():
             elif event.type == pygame.KEYDOWN:
                 if 97 <= event.key <= 122:
                     name = name[:-1] + chr(event.key).upper() + '|'
-            elif event.type ==  pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 if 300 <= event.pos[0] <= 500 and 200 <= event.pos[1] <= 245:
                     name = 'RECORDED!'
                     recorded = True
@@ -180,6 +174,7 @@ def new_record():
             start_screen()
             return
 
+
 def game():
     '''
     Основной игровой цикл
@@ -195,7 +190,7 @@ def game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        ship.cur_anim = 'stright'
+        ship.cur_anim = 'straight'
         if pygame.key.get_pressed()[pygame.K_LEFT]:
             ship.rect.x -= ship.speed
             ship.cur_anim = 'left'
@@ -209,5 +204,10 @@ def game():
         clock.tick(FPS)
     pygame.quit()
 
+
+all_sprites = pygame.sprite.Group()
+enemies = pygame.sprite.Group()
+player_bullets = pygame.sprite.Group()
+enemy_bullets = pygame.sprite.Group()
 
 start_screen()
