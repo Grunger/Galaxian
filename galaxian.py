@@ -1,5 +1,6 @@
 import os
 import pygame
+import pygame_gui
 import sys
 
 pygame.init()
@@ -106,33 +107,39 @@ def start_screen():
     """
     Начальная заставка с кнопками
     """
-    font = pygame.font.Font('./data/Amatic-Bold.ttf', 36)
+    manager = pygame_gui.UIManager((WIDTH, HEIGHT))
+    # Кнопки
+    start_btn = pygame_gui.elements.UIButton(
+        relative_rect=pygame.Rect((WIDTH // 2 - 50, HEIGHT // 3 - 25), (100, 50)),
+        text='Начать игру',
+        manager=manager
+    )
+    records_btn = pygame_gui.elements.UIButton(
+        relative_rect=pygame.Rect((WIDTH // 2 - 50, HEIGHT // 2 - 25), (100, 50)),
+        text='Рекорды',
+        manager=manager
+    )
+    exit_btn = pygame_gui.elements.UIButton(
+        relative_rect=pygame.Rect((WIDTH // 2 - 50, HEIGHT // 2 + 125), (100, 50)),
+        text='Выход',
+        manager=manager
+    )
     screen.fill(pygame.Color("black"))
-    button = load_image('button.png')
-    screen.blit(button, (300, 200))
-    string_rendered = font.render('START GAME', True, pygame.Color('black'))
-    intro_rect = string_rendered.get_rect().move(350, 200)
-    screen.blit(string_rendered, intro_rect)
-    screen.blit(button, (300, 250))
-    string_rendered = font.render('RECORDS', True, pygame.Color('black'))
-    intro_rect = string_rendered.get_rect().move(360, 250)
-    screen.blit(string_rendered, intro_rect)
-    screen.blit(button, (300, 300))
-    string_rendered = font.render('EXIT', True, pygame.Color('black'))
-    intro_rect = string_rendered.get_rect().move(380, 300)
-    screen.blit(string_rendered, intro_rect)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if 300 <= event.pos[0] <= 500 and 200 <= event.pos[1] <= 245:
-                    game()
-                    return
-                if 300 <= event.pos[0] <= 500 and 250 <= event.pos[1] <= 295:
-                    new_record()
-                if 300 <= event.pos[0] <= 500 and 300 <= event.pos[1] <= 345:
-                    terminate()
+            if event.type == pygame.USEREVENT:
+                if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                    if event.ui_element == start_btn:
+                        game()
+                    if event.ui_element == records_btn:
+                        pass
+                    if event.ui_element == exit_btn:
+                        terminate()
+            manager.process_events(event)
+        manager.update(FPS / 1000)
+        manager.draw_ui(screen)
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -189,6 +196,7 @@ def game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+                terminate()
         ship.cur_anim = 'straight'
         if pygame.key.get_pressed()[pygame.K_LEFT]:
             ship.rect.x -= ship.speed
@@ -208,5 +216,4 @@ all_sprites = pygame.sprite.Group()
 enemies = pygame.sprite.Group()
 player_bullets = pygame.sprite.Group()
 enemy_bullets = pygame.sprite.Group()
-
 start_screen()
