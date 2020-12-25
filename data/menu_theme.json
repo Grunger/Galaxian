@@ -3,8 +3,20 @@
     "colours": {
       "normal_bg": "#30AA30AA,#AA3030,180",
       "normal_border": "#30AA30AA,#AA3030,0",
-      "hovered_bg": "#35393e"
+      "hovered_bg": "#35393e",
+      "normal_text": "#1234cc"
     },
+    "font":
+        {
+            "name": "codename",
+            "size": "26",
+            "bold": "0",
+            "italic": "0",
+            "regular_path": "data/fonts/20219.ttf",
+            "bold_path": "data/fonts/20219.ttf",
+            "italic_path": "data/fonts/20219.ttf",
+            "bold_italic_path": "data/fonts/20219.ttf"
+        },
     "misc": {
       "shape": "rounded_rectangle",
       "shape_corner_radius": "5",
