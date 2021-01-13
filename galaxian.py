@@ -257,6 +257,7 @@ def game():
     #enemy = Enemy(load_image('enemy.png'), 2, 1, 100, 400)
     shot = pygame.mixer.Sound(os.path.join('data', 'laser.wav'))
     running = True
+    pause = False
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -264,25 +265,37 @@ def game():
                 terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    if len(player_bullets.sprites()) < 3:
-                        Bullet(ship.rect.x + ship.rect.w, ship.rect.y)
-                        shot.play()
-        ship.cur_anim = 'straight'
-        if pygame.key.get_pressed()[pygame.K_LEFT]:
-            ship.rect.x -= ship.speed
-            ship.cur_anim = 'left'
-        if pygame.key.get_pressed()[pygame.K_RIGHT]:
-            ship.rect.x += ship.speed
-            ship.cur_anim = 'right'
-        screen.fill(pygame.Color("black"))
-        all_sprites.draw(screen)
-        all_sprites.update()
-        pygame.display.flip()
-        clock.tick(FPS)
-        score = 40 - len(enemies.sprites())
-        if len(enemies.sprites()) == 0:
-            new_record(score)
-            return 0
+                    if not pause:
+                        if len(player_bullets.sprites()) < 3:
+                            Bullet(ship.rect.x + ship.rect.w, ship.rect.y)
+                            shot.play()
+                if event.key == pygame.K_ESCAPE:
+                    terminate()
+                if event.key == pygame.K_p:
+                    pause = not pause
+        if not pause:
+            ship.cur_anim = 'straight'
+            if pygame.key.get_pressed()[pygame.K_LEFT]:
+                ship.rect.x -= ship.speed
+                ship.cur_anim = 'left'
+            if pygame.key.get_pressed()[pygame.K_RIGHT]:
+                ship.rect.x += ship.speed
+                ship.cur_anim = 'right'
+            screen.fill(pygame.Color("black"))
+            all_sprites.draw(screen)
+            all_sprites.update()
+            pygame.display.flip()
+            clock.tick(FPS)
+            score = 40 - len(enemies.sprites())
+            if len(enemies.sprites()) == 0:
+                new_record(score)
+                return 0
+        else:
+            font = pygame.font.Font('./data/fonts/20219.ttf', 200)
+            string_rendered = font.render('PAUSE', True, pygame.Color('green'))
+            rec_rect = string_rendered.get_rect().move(150, 100)
+            screen.blit(string_rendered, rec_rect)
+            pygame.display.flip()
     pygame.quit()
 
 
