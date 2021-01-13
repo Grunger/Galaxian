@@ -106,12 +106,14 @@ class Bullet(pygame.sprite.Sprite):
         self.image.fill(pygame.Color('red'))
         self.rect = self.image.get_rect()
         self.rect = self.rect.move(x, y)
+        self.boom = pygame.mixer.Sound(os.path.join('data', 'boom.wav'))
 
     def update(self):
         self.rect.y -= self.speed
         if pygame.sprite.spritecollideany(self, enemies):
             pygame.sprite.spritecollide(self, enemies, True)
             self.kill()
+            self.boom.play()
         if self.rect.y < -10:
             self.kill()
 
@@ -145,6 +147,8 @@ def start_screen():
         text='Выход',
         manager=manager
     )
+    sound = pygame.mixer.Sound(os.path.join('data', 'fon.wav'))
+    sound.play(loops=-1)
     back = load_image('start_fon.jpg')
     screen.blit(back, (0, 0))
     while True:
@@ -156,6 +160,7 @@ def start_screen():
                     if event.ui_element == start_btn:
                         game()
                     if event.ui_element == records_btn:
+                        sound.fadeout(500)
                         show_records()
                     if event.ui_element == exit_btn:
                         terminate()
@@ -246,11 +251,11 @@ def game():
     Основной игровой цикл
     """
     ship = Ship(load_image("ship.gif"), 8, 1, 350, 500)
-    #for y in range(20, 300, 50):
-    #    for x in range(100, 700, 75):
-    #        enemy = Enemy(load_image('enemy.png'), 2, 1, x, y)
-    enemy = Enemy(load_image('enemy.png'), 2, 1, 100, 400)
-
+    for y in range(20, 300, 50):
+        for x in range(100, 700, 75):
+            enemy = Enemy(load_image('enemy.png'), 2, 1, x, y)
+    #enemy = Enemy(load_image('enemy.png'), 2, 1, 100, 400)
+    shot = pygame.mixer.Sound(os.path.join('data', 'laser.wav'))
     running = True
     while running:
         for event in pygame.event.get():
@@ -261,6 +266,7 @@ def game():
                 if event.key == pygame.K_SPACE:
                     if len(player_bullets.sprites()) < 3:
                         Bullet(ship.rect.x + ship.rect.w, ship.rect.y)
+                        shot.play()
         ship.cur_anim = 'straight'
         if pygame.key.get_pressed()[pygame.K_LEFT]:
             ship.rect.x -= ship.speed

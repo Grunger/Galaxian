@@ -19,7 +19,7 @@
         },
     "misc": {
       "shape": "rounded_rectangle",
-      "shape_corner_radius": "5",
+      "shape_corner_radius": "50",
       "border_width": "5",
       "shadow_width": "1",
       "tool_tip_delay": "1.0",
